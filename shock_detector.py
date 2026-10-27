@@ -145,7 +145,7 @@ class ShockDetector:
 class SoundPlayer:
     """Plays alert sounds."""
     
-    def __init__(self, sound_file: str = None, sounds_dir: str = "sounds"):
+    def __init__(self, sound_file: str = None, sounds_dir: str = "sounds/hentai"):
         """
         Initialize sound player.
         
