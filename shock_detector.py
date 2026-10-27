@@ -43,13 +43,20 @@ class AccelerometerReader:
         """Set the accelerometer sampling frequency."""
         try:
             if self.sampling_freq_path.exists():
-                # Try to set frequency (may require sudo)
+                # Read current value first: if already correct, no write needed
+                try:
+                    current = float(self.sampling_freq_path.read_text().strip())
+                except (OSError, ValueError):
+                    current = None
+                if current == freq:
+                    print(f"  Sampling frequency already at {freq} Hz")
+                    return
                 try:
                     self.sampling_freq_path.write_text(str(freq))
                     print(f"  Sampling frequency set to: {freq} Hz")
                 except PermissionError:
                     # If we can't set it, try with sudo hint
-                    print(f"  ⚠ Cannot set sampling frequency (need sudo)")
+                    print(f"  ⚠ Cannot set sampling frequency to {freq} Hz (need sudo)")
                     print(f"    Run: sudo sh -c 'echo {freq} > {self.sampling_freq_path}'")
         except Exception as e:
             print(f"  ⚠ Could not configure sampling frequency: {e}")
@@ -145,7 +152,7 @@ class ShockDetector:
 class SoundPlayer:
     """Plays alert sounds."""
     
-    def __init__(self, sound_file: str = None, sounds_dir: str = "sounds/hentai"):
+    def __init__(self, sound_file: str = None, sounds_dir: str = "sounds/real"):
         """
         Initialize sound player.
         
